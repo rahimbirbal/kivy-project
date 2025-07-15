@@ -8,18 +8,20 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    container: docker.io/kivy/buildozer:latest-python3
 
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Install build dependencies
+      - name: Install dependencies
         run: |
-          apt-get update
-          apt-get install -y zip unzip libffi-dev libssl-dev libsqlite3-dev
-          pip install --upgrade pip
-          pip install Cython
+          sudo apt-get update
+          sudo apt-get install -y \
+            python3-pip zip unzip openjdk-17-jdk \
+            libffi-dev libssl-dev libsqlite3-dev \
+            git curl build-essential
+          pip install --upgrade pip Cython
+          pip install buildozer
 
       - name: Build APK
         env:
@@ -32,4 +34,3 @@ jobs:
         with:
           name: warna-app.apk
           path: bin/*.apk
-          retention-days: 5
