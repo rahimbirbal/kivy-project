@@ -1,0 +1,5 @@
+kivy
+pandas
+scikit-learn
+joblib
+opencv-python
