@@ -2,14 +2,13 @@ name: Build APK
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    container: kivy/buildozer
+    container: docker.io/kivy/buildozer:latest-python3
 
     steps:
       - name: Checkout
@@ -34,4 +33,3 @@ jobs:
           name: warna-app.apk
           path: bin/*.apk
           retention-days: 5
-          if-no-files-found: error
