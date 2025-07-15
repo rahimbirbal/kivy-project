@@ -53,23 +53,24 @@ jobs:
           export SDK_ROOT=$ANDROID_SDK_ROOT
           mkdir -p $SDK_ROOT/cmdline-tools
 
-          # Download and extract Android command line tools
+          # Download Android Command Line Tools
           curl -o sdk-tools.zip https://dl.google.com/android/repository/commandlinetools-linux-10406996_latest.zip
           unzip -q sdk-tools.zip -d $SDK_ROOT/cmdline-tools
+
+          # Struktur direktori yang benar
           mv $SDK_ROOT/cmdline-tools/cmdline-tools $SDK_ROOT/cmdline-tools/latest
 
-          # Add tools to PATH
+          # Update PATH agar sdkmanager bisa dipanggil
           echo "$SDK_ROOT/cmdline-tools/latest/bin" >> $GITHUB_PATH
 
-          # Accept licenses & install build-tools
-          yes | $SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --sdk_root=$SDK_ROOT --licenses
+          # Install & Accept licenses
           $SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --sdk_root=$SDK_ROOT "platform-tools" "platforms;android-33" "build-tools;36.0.0"
+          yes | $SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --licenses --sdk_root=$SDK_ROOT
         env:
-          ANDROID_SDK_ROOT: ~/.buildozer/android/platform/android-sdk
+          ANDROID_SDK_ROOT: /home/runner/.buildozer/android/platform/android-sdk
 
       - name: Build APK
-        run: |
-          buildozer -v android debug
+        run: buildozer -v android debug
         env:
           BUILDOZER_ALLOW_ROOT: 1
 
@@ -78,3 +79,4 @@ jobs:
         with:
           name: warna-app
           path: bin/*.apk
+
