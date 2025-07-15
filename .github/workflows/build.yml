@@ -48,6 +48,19 @@ jobs:
         env:
           ANDROID_SDK_ROOT: ~/.buildozer/android/platform/android-sdk
 
+      - name: Setup Android SDK & Accept Licenses
+        run: |
+          export SDK_ROOT=$ANDROID_SDK_ROOT
+          mkdir -p $SDK_ROOT/cmdline-tools
+          cd $SDK_ROOT/cmdline-tools
+          wget https://dl.google.com/android/repository/commandlinetools-linux-10406996_latest.zip -O cmdline-tools.zip
+          unzip -q cmdline-tools.zip
+          mv cmdline-tools latest
+          yes | $SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --sdk_root=${SDK_ROOT} --licenses || true
+          yes | $SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --sdk_root=${SDK_ROOT} "build-tools;36.0.0" || true
+        env:
+          ANDROID_SDK_ROOT: ~/.buildozer/android/platform/android-sdk
+
       - name: Build APK
         run: |
           buildozer -v android debug
