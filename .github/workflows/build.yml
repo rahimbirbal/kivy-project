@@ -69,6 +69,13 @@ jobs:
         env:
           ANDROID_SDK_ROOT: /home/runner/.buildozer/android/platform/android-sdk
 
+      - name: Override Buildozer SDK path manually
+        run: |
+          echo "[buildozer]" > buildozer.spec.override
+          echo "android.sdk_path = /home/runner/.buildozer/android/platform/android-sdk" >> buildozer.spec.override
+          cat buildozer.spec >> buildozer.spec.override
+          mv buildozer.spec.override buildozer.spec
+
       - name: Build APK
         run: buildozer -v android debug
         env:
