@@ -52,18 +52,18 @@ jobs:
         run: |
           export SDK_ROOT=$ANDROID_SDK_ROOT
           mkdir -p $SDK_ROOT/cmdline-tools
-          cd $SDK_ROOT/cmdline-tools
 
-          # Download cmdline-tools
+          # Download and extract commandline-tools
           curl -o sdk.zip https://dl.google.com/android/repository/commandlinetools-linux-10406996_latest.zip
-          unzip sdk.zip
-          mv cmdline-tools latest
+          unzip -q sdk.zip -d $SDK_ROOT/cmdline-tools
+          mv $SDK_ROOT/cmdline-tools/cmdline-tools $SDK_ROOT/cmdline-tools/latest
 
           # Accept licenses and install build-tools
           $SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --sdk_root=$SDK_ROOT --licenses <<< "y"
           $SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --sdk_root=$SDK_ROOT "build-tools;36.0.0"
         env:
           ANDROID_SDK_ROOT: ~/.buildozer/android/platform/android-sdk
+
 
       - name: Build APK
         run: |
