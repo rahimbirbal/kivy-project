@@ -42,6 +42,12 @@ jobs:
         env:
           ANDROID_SDK_ROOT: ~/.buildozer/android/platform/android-sdk
 
+      - name: Install Android SDK Build Tools & Accept Licenses
+        run: |
+          yes | sdkmanager "build-tools;36.0.0" || true
+        env:
+          ANDROID_SDK_ROOT: ~/.buildozer/android/platform/android-sdk
+
       - name: Build APK
         run: |
           buildozer -v android debug
