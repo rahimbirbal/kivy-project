@@ -29,7 +29,9 @@ jobs:
           buildozer android debug
 
       - name: Upload APK
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: warna-app.apk
           path: bin/*.apk
+          retention-days: 5
+          if-no-files-found: error
