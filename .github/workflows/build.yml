@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout source code
         uses: actions/checkout@v3
 
       - name: Setup Python
@@ -19,23 +19,33 @@ jobs:
         with:
           python-version: 3.10
 
-      - name: Install build dependencies
+      - name: Install system dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y zip unzip libffi-dev libssl-dev libsqlite3-dev openjdk-17-jdk
+          sudo apt-get install -y zip unzip openjdk-17-jdk libffi-dev libssl-dev libsqlite3-dev
           pip install --upgrade pip
           pip install Cython buildozer
 
-      - name: Accept Android SDK Licenses
-        run: yes | buildozer android update
+      - name: Initialize Buildozer (if needed)
+        run: |
+          if [ ! -f buildozer.spec ]; then
+            buildozer init
+          fi
+
+      - name: Accept Android SDK licenses
+        run: |
+          yes | sdkmanager --licenses || true
+        env:
+          ANDROID_SDK_ROOT: ~/.buildozer/android/platform/android-sdk
 
       - name: Build APK
+        run: |
+          buildozer -v android debug
         env:
           BUILDOZER_ALLOW_ROOT: 1
-        run: buildozer -v android debug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: warna-app.apk
+          name: warna-app
           path: bin/*.apk
